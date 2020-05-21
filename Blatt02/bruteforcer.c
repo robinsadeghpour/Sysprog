@@ -15,10 +15,13 @@ int main(int argc, char *argv[]) {
 	// pwd_maxlen = ...
 	// max_workers = ...
 	// filename = ...
-	
+	pwd_maxlen = atoi(argv[1]);
+	max_workers = atoi(argv[2]);
+	filename = argv[3];
 	// worker = ...
 	// worker array mit 0 initialisieren
 	// TODO
+	worker = calloc(max_workers, sizeof(pid_t));
 	
 	INFO("\nBRUTEFORCER GESTARTET\n");
 	INFO("---------------------\n");
@@ -30,22 +33,30 @@ int main(int argc, char *argv[]) {
 	// Hashes in ein hashes struct laden
 	// TODO
 	// loaded_hashes = ...
-	
+	loaded_hashes = load_hashes(filename);
 	// Main loop -> Iteriert über alle Hashes
 	for (int i = 0; i < loaded_hashes->len; i++) {
 		char *hash = loaded_hashes->array[i];
-		
+
 		// Hash mit crack_hash versuchen zu knacken
 		// TODO
-		
+
+		pwd *cracked_pwd = crack_hash(hash);
 		// Erfolg? -> print password
 		// Fehlgeschlagen? -> Einfach weiter in der Schleife
+		// fprintf(stdout, "halllooo %d\n", cracked_pwd == NULL);
+
+		if(cracked_pwd != NULL) {
+			printf("%s\n", cracked_pwd->buf);
+		}
 		
 	}
 	
 	// Aufräumen und beenden
 	// TODO
-	
+	free(worker);
+	free(loaded_hashes);
+	printf("passwort nicht gefunden");
 	return 0;
 }
 
@@ -63,18 +74,44 @@ pwd *crack_hash(char *hash) {
 	// ODER
 	// Schleifenabbruch, wenn das Passwort gefunden wurde
 	// TODO
+	test_string(password->buf, hash);
+	// fprintf(stdout, "%d %s\n", 1111, password->buf);
+
+	int i = 1;
+	while(i != 0 && test_string(password->buf, hash) == 0) {
+		i = next_password(password);
+		// fprintf(stdout, "%d %s\n", i, password->buf);
+	}
+	// fprintf(stdout, "%s %d", password->buf, test_string(password->buf, hash));
+
 	
 	// Aufräumen
 	// TODO
-	
+	pwd *password_result = password;
+	// free_password(password);
+
 	// Passwort nicht gefunden -> NULL zurückgeben
 	// Passwort gefunden -> das Password zurückgeben
 	// TODO
+	// fprintf(stdout, "test %d\n",test_string(password->buf, hash));
+	if(test_string(password->buf, hash) == 1) {
+		return password;
+	} else {
+		return NULL;
+	}
 }
 
 // Berechnet den Hash von string und gibt 1 zurück, wenn er mit hash übereinstimmt, sonst 0
 int test_string(char *string, char *hash) {
 	// TODO
+	char *string_hash = sha256(string);
+	int equals = 0;
+	// if the hash of string equals hash then set equals = 1
+	if(strcmp(hash, string_hash) == 0) {
+		equals = 1;
+		free(string_hash);
+	}
+	return equals;
 }
 
 /**

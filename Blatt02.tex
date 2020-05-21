@@ -1,0 +1,176 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{listings}
+\usepackage {tikz}
+\usetikzlibrary {positioning}
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+
+\title{Theorie Blatt02}
+\author{Jonas Kuß, Anton Jürß, Daniel Nikulin, Robin Sadeghpour}
+
+\begin{document}
+\noindent
+    \section*{Aufgabe 2.3}
+    \subsection*{a)}
+    Prozesse representieren sequentielle Aktivitäten innerhalb eines Systems.\\
+    Sie sind dynamische Objekte. Ein Prozess ist eine Art virtueller Rechner für
+    eine bestimmte Ausführung eines Programms.\\
+    Ein Prozess wird definiert durch den Besitz von Ressourcen, 
+    durch eine \\Arbeitsvorschrift und durch einen Aktivitätsträger, welcher die\\
+    Verarbeitungsvorschrift ausführt. 
+    Da Prozesse schaffen Struktur und Ordnung innerhalb eines \\
+    Programms (Prozesshirarchie)
+    und ermöglichen neben sequentieller Arbeit, auch parallele (Nebenläufigkeit und Parallelität). 
+    Somit ermöglichen Prozesse eine effizientere Nutzung von Ressourcen.
+    Prozesse werden von einem laufendem Programm erzeugt und erhalten von diesem Eingaben,
+    welche sie verarbeiten und liefer demzufolge Ausgaben. Sie sind somit einem Programm
+    eindeutig zugewiesen und können somit als eine Instanz dessen aufgefasst werden.
+    \\
+    \\
+    Quellen: Vorlesungsfolien Kapitel 2, Folien 1-14
+    \subsection*{b)}
+    \paragraph{Nebenläufigkeit}
+    ist eine "logisch simultane Verarbeitung von Operationsströmen" (VL Kapitel 2 Folie 12),
+    wobei die Prozesse nicht tatsächlich simultan, bzw. parallel Ablaufen sondern verzahnt auf 
+    einem Einprozessorsystem.\\
+    Dabei werden mehrere Prozesse mindestens einem Prozessor zugeordnet.
+    \paragraph{Parallelität} 
+    ist eine tatsächlich simultane Ausführung von Prozessen.\\
+    Es werden mehrere Prozesse auf mindestens
+    zwei Prozessoren zugeordnet. Somit ist die Parallelität eine Teilmenge der Nebenläufigkeit.
+    Zudem sind sind mehrfache Verarbeitungselemente notwendig (z.B. Prozessoren).
+    \\
+    \\
+    Quellen: Vorlesungsfolien Kapitel 2, Folien 12-14
+    \subsection*{c)}
+    Prozesse können im Betriebssystem dank der Datenstruktur des Process Control Block (PCB)
+    implementiert werden. Der PCB ist ein "verwaltungstechnischer Repräsentant des Prozesses" (VL Kapitel 2 Folie 16).
+    Der PCB enthält Information über den Prozess, unter anderem die Prozessnummer, oder die Zustandsvariable. \\
+    Die Zustandsvariable bezeichnet in welchen Zustand der Prozessor sich befindet (Bereit, Laufend, etc.).\\
+    Falls ein Zustandswechsel statt findet, werden jenachdem die aktuellen Registerinhalte in dem PCB abgelegt
+    oder von dem PCB geladen, der virtuelle Adressraum innerhalb des PCB umgeschaltet und der Prozesszustand aktualisiert.
+    \\
+    \\
+    Quellen: Vorlesungsfolien Kapitel 2, Folien 16-18
+    \subsection*{d)}
+    TODO
+    \section*{Aufgabe 2.4}
+    \subsection*{a)}
+    \begin {center}
+        \begin {tikzpicture} [
+            roundnode/.style={circle, draw=black, fill=white, very thick, minimum size=10mm}
+        ]
+        %Nodes
+        \node[roundnode](a) at (0,0)    {a};
+        \node[roundnode](b) at (0,-2)   {b};
+        \node[roundnode](c) at (0,-4)   {c};
+        \node[roundnode](d) at (3,-1)   {d};
+        \node[roundnode](e) at (6,-2)   {e};
+        \node[roundnode](f) at (9,0)    {f};
+        \node[roundnode](j) at (9,-2)   {j};
+        \node[roundnode](g) at (9,-4)   {g};
+        \node[roundnode](h) at (12,0)   {h};
+        \node[roundnode](i) at (12,-4)  {i};
+        \node[roundnode](k) at (15,-2)  {k};
+
+        %Lines
+        \draw[->] (a) -- (d);
+        \draw[->] (b) -- (d);
+        \draw[->] (c) -- (e);
+        \draw[->] (d) -- (e);
+        \draw[->] (e) -- (f);
+        \draw[->] (e) -- (j);
+        \draw[->] (e) -- (g);
+        \draw[->] (f) -- (h);
+        \draw[->] (e) -- (f);
+        \draw[->] (j) -- (k);
+        \draw[->] (g) -- (i);
+        \draw[->] (i) -- (k);
+        \end{tikzpicture}
+    \end{center}
+    \subsection*{b)}
+    \begin{lstlisting}
+        a
+        fork b
+        fork c
+        join b 
+        d
+        join c
+        e 
+        fork PartOne
+        fork PartTwo
+        j
+        join PartTwo
+        k
+
+
+        PartOne:                PartTwo:
+        f                       g
+        h                       j
+        end                     end
+    \end{lstlisting}
+    \indent
+\section*{Aufgabe 2.5}
+\begin{minipage}{.5\textwidth}
+    \subsection*{a) fork/join}
+    \begin{lstlisting}
+        C
+        fork Part
+        fork B
+        fork K
+        join B
+        D
+        E
+        fork F
+        join K
+        G
+        join F
+        fork J
+        Join Part
+        I
+        join J
+        X
+    
+
+        Part:
+        A
+        H
+        end
+    \end{lstlisting}
+\end{minipage}% This must go next to `\end{minipage}`
+\begin{minipage}{.5\textwidth}
+    \subsection*{a) parbegin/parend}
+    \begin{lstlisting}
+        parbegin
+            begin
+                A
+                H
+            end
+            begin
+                parbegin
+                    B
+                    C
+                parend
+                D
+                parbegin
+                    E
+                    K
+                parend
+                parbegin
+                    F
+                    G
+                parend
+            end
+        parend
+        parbegin
+            I
+            J
+        parend
+        X
+    \end{lstlisting}
+\end{minipage}
+
+
+
+
+
+\end{document}

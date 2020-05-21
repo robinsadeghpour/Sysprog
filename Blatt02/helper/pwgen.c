@@ -3,6 +3,13 @@ int next_pwd_internal(char *shifted_buffer, int remaining_buff_size);
 
 pwd *new_password(int maxlen) {
 	// TODO
+	// initialize new password and allocate dynamic storage
+	pwd *new_password = malloc(sizeof(pwd));
+	// initialize string with 0 and allocate for maxlen +1 (nullbyte)
+	new_password->buf = calloc(maxlen+1, sizeof(char));
+	new_password->buflen = maxlen+1;
+
+	return new_password;
 }
 
 /**
@@ -19,6 +26,7 @@ int next_password(pwd *thepwd) {
 
 int next_pwd_internal(char *shifted_buffer, int remaining_buff_size) {
 	if (shifted_buffer[0] == '\0') {
+
 		if (remaining_buff_size > 1) {
 			shifted_buffer[0] = 'a';
 			shifted_buffer[1] = '\0';
@@ -39,8 +47,14 @@ int next_pwd_internal(char *shifted_buffer, int remaining_buff_size) {
 	 * Eine ASCII Tabelle kann Ihnen helfen.
 	*/
 	
+	// fprintf(stderr, "stats: %d %d %d\n", shifted_buffer[0], 48 <= shifted_buffer[0] && shifted_buffer[0] < 57, 97 <= shifted_buffer[0] && shifted_buffer[0] < 122);
 	// TODO
-	
+	if((48 <= shifted_buffer[0] && shifted_buffer[0] < 57) || (97 <= shifted_buffer[0] && shifted_buffer[0] < 122)) {
+		shifted_buffer[0]++;
+		// fprintf(stdout, "halllooo2\n");
+
+		return 1;
+	}
 	
 	/**
 	 * Wenn der char in shifted_buffer[0] ein z ist, dann soll
@@ -51,7 +65,12 @@ int next_pwd_internal(char *shifted_buffer, int remaining_buff_size) {
 	 */
 	
 	// TODO
-	
+	if(shifted_buffer[0] == 122) {
+		shifted_buffer[0] = 48;
+
+		return 1;
+	}
+
 	
 	// Wenn der char in shifted_buffer[0] eine '9' ist, dann wird die nächste Stelle bearbeitet
 	if (shifted_buffer[0] == '9') {
@@ -61,10 +80,12 @@ int next_pwd_internal(char *shifted_buffer, int remaining_buff_size) {
 		}
 		return retval;
 	}
-	
+
 	return 0;
 }
 
 void free_password(pwd *thepwd) {
 	// TODO
+	free(thepwd->buf);
+	free(thepwd);
 }
