@@ -75,7 +75,10 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}
-		while (wait(NULL) > 0) {/*wait*/}
+		while (update_worker() != 0) {
+			/*wait*/
+			wait(NULL);
+		}
 	}
 
 	// Aufräumen und beenden
