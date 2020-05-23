@@ -36,39 +36,22 @@ int main(int argc, char *argv[])
 	// TODO
 	// loaded_hashes = ...
 	loaded_hashes = load_hashes(filename);
-	int offset = 0;
 	// Main loop -> Iteriert über alle Hashes
-	for (int i = 0; i < loaded_hashes->len; i += offset)
+	for (int i = 0; i < loaded_hashes->len; i += 1)
 	{
-		// char *hash = loaded_hashes->array[i];
-
 		// Hash mit crack_hash versuchen zu knacken
 		// TODO
-		int status = update_worker();
-		offset = 0;
-		pid_t process = fork();
-
-		while (status < max_workers)
+		pid_t process = -1;
+		while (update_worker() >= max_workers)
 		{
-			process = fork();
-			if (process == 0)
-			{
-				break;
-			}
-			for (int j = 0; j < max_workers; j++)
-			{
-				if (worker[j] == 0)
-				{
-					worker[j] = process;
-					break;
-				}
-			}
-			offset++;
-			status++;
+			/*wait*/
+			//wait(NULL);
 		}
+
+		process = fork();
 		if (process == 0)
 		{
-			char *hash = loaded_hashes->array[i + offset];
+			char *hash = loaded_hashes->array[i];
 			pwd *cracked_pwd = crack_hash(hash);
 
 			// printf("[son] pid %d from [parent] pid %d\n", getpid(), getppid());
@@ -78,10 +61,19 @@ int main(int argc, char *argv[])
 			{
 				printf("%s\n", cracked_pwd->buf);
 			}
-			free(cracked_pwd->buf);
-			free(cracked_pwd);
-			
-			break;
+			free(worker);
+			free_hashes(loaded_hashes);
+			free_password(cracked_pwd);
+
+			return 0;
+		}
+		for (int j = 0; j < max_workers; j++)
+		{
+			if (worker[j] == 0)
+			{
+				worker[j] = process;
+				break;
+			}
 		}
 	}
 
@@ -127,7 +119,7 @@ pwd *crack_hash(char *hash)
 	}
 	else
 	{
-		free(password);
+		free_password(password);
 		return NULL;
 	}
 }
@@ -142,8 +134,8 @@ int test_string(char *string, char *hash)
 	if (strcmp(hash, string_hash) == 0)
 	{
 		equals = 1;
-		free(string_hash);
 	}
+	free(string_hash);
 	return equals;
 }
 
@@ -164,14 +156,10 @@ int update_worker()
 	{
 		// TODO
 		pid_t status = waitpid(worker[i], NULL, WNOHANG);
-	
-		if (status == worker[i])
+
+		if (status == worker[i] || status < 0)
 		{
 			worker[i] = 0;
-		}
-		else if (status < 0)
-		{
-			return 0;
 		}
 		else if (status == 0)
 		{

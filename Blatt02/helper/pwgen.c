@@ -86,6 +86,9 @@ int next_pwd_internal(char *shifted_buffer, int remaining_buff_size) {
 
 void free_password(pwd *thepwd) {
 	// TODO
+	if(thepwd == NULL) {
+		return;
+	}
 	free(thepwd->buf);
 	free(thepwd);
 }
