@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		while (update_worker() >= max_workers)
 		{
 			/*wait*/
-			//wait(NULL);
+			wait(NULL);
 		}
 
 		process = fork();
@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}
+		while (wait(NULL) > 0) {/*wait*/}
 	}
 
 	// Aufräumen und beenden
