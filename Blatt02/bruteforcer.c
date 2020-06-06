@@ -60,10 +60,11 @@ int main(int argc, char *argv[])
 			if (cracked_pwd != NULL)
 			{
 				printf("%s\n", cracked_pwd->buf);
+				free_password(cracked_pwd);
+
 			}
 			free(worker);
 			free_hashes(loaded_hashes);
-			free_password(cracked_pwd);
 
 			return 0;
 		}

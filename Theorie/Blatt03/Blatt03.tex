@@ -1,0 +1,148 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{listings}
+\usepackage {tikz}
+\usepackage[]{hyperref}
+\usepackage{changepage}
+\usepackage{textgreek}
+\usetikzlibrary {positioning}
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+
+\title{Theorie Blatt02}
+\author{Jonas Kuß, Anton Jürß, Daniel Nikulin, Robin Sadeghpour}
+
+\begin{document}
+\noindent
+\paragraph{Jonas Kuß, Anton Jürß, Daniel Nikulin, Robin Sadeghpour}
+\section*{Aufgabe 3.4}
+\subsection*{a)}
+Das Scheduling Verfahren bevorzugt nicht nur kurze Jobs, sondern
+berücksichtigt auch die Wartezeit längerer Jobs.
+
+\subsection*{b)}
+Die Prioritätsinvertierung ist ein Phänomen das bei Scheduling Verfahren
+welche über Prioritäten verfügen eine Rolle spielt. A ist ein laufender
+Prozess, der die Ressource A besitzt. Der Prozess H, der eine höhere Priorität
+als L hat, befindet sich in einem blockierten Zustand, da dieser die Ressource A
+benötigt, welche aber gerade im Besitz von L ist.
+Wenn nun der Prozess M gestartet wird, der eine höhere Priorität als L aber eine
+geringere als H hat, verdrängt dieser den Prozess L.
+Somit muss H warten, bis M fertig ist, damit A weiterarbeiten kann und somit die
+Ressource A wieder frei gegeben ist.
+
+\subsection*{c)}
+Um das Problem zu lösen erbt L die Priorität von H, solange L die Ressource A besitzt.
+Somit kann A vor M arbeiten und die Ressource A freigeben. Daraufhin kann H in den laufenden
+Zustand versetzt werden und arbeiten.'Dies nennt man Priorityinheritance.
+
+\subsection*{d)}
+\paragraph{Beim Offline Scheduling} wird vor der Laufzeit bereits "gescheduled".
+Voraussetzung ist, dass alle Prozesse, auch zukünftige Ankünftige, sind bekannt.
+Also es werden vollständige Informationen benötigt.
+\paragraph{Beim Online Scheduling} dahingegen, wird zur Laufzeit "gescheduled".
+Es werden lediglich aktuelle Daten benötigt. Die Entscheidungsfindung beruht auf
+unvollständigen Informationen.\\
+
+\subsection*{e)}
+Ein Hard real-time system (HRTS) ist ein striktes Echtheitssystem, wobei
+Systemausfall bedingte Verletzungen nicht tolerierbar sind. Diese werden oft
+in Offline-Algorithmen eingesetzt.
+Bei Soft real-time systems (SRTS) sind Verletzungen tolerierbar, diese verursachen
+jedoch einen Qualitätsverlust. Beides sind jedoch Echtheitssysteme.
+
+\section*{3.5}
+\subsection*{a)}
+\subsubsection*{Prozesse:}
+\begin{center}
+    \begin{tabular}{ c|c c c c c c c c c c c c c c c c c c }
+        Prozess           & A & B & C & D & E \\
+        \hline
+        Ankunftszeitpunkt & 0 & 2 & 3 & 6 & 8 \\
+        Dauer             & 7 & 4 & 3 & 2 & 4 \\
+    \end{tabular}
+\end{center}
+
+\subsubsection*{SRTN:}
+\begin{center}
+    \begin{adjustwidth}{-2cm}{}
+        \begin{tabular}{ c| c c c c c c c c c c c c c c c c c c c c }
+            Zeit          & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+            \hline
+            CPU           & A & A & B & B & B & B & D & D & C & C & C  & E  & E  & E  & E  & A  & A  & A  & A  & A  \\
+            \hline
+            Warteschlange &   &   & A & C & C & C & C & C & E & E & E  & A  & A  & A  & A  &    &    &    &    &    \\
+                          &   &   &   & A & A & A & A & A & A & A & A  &    &    &    &    &    &    &    &    &    \\
+        \end{tabular}
+    \end{adjustwidth}
+\end{center}
+
+\subsubsection*{HRRN:}
+\begin{center}
+    \begin{adjustwidth}{-2cm}{}
+
+        \begin{tabular}{ c| c c c c c c c c c c c c c c c c c c c c }
+            Zeit          & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+            \hline
+            CPU           & A & A & A & A & A & A & A & C & C & C & B  & B  & B  & B  & D  & D  & E  & E  & E  & E  \\
+            \hline
+            Warteschlange &   &   & B & B & B & B & C & B & B & B & D  & D  & D  & D  & E  & E  &    &    &    &    \\
+                          &   &   &   & C & C & C & B & D & D & D & E  & E  & E  & E  &    &    &    &    &    &    \\
+                          &   &   &   &   &   &   & D &   & E & E &    &    &    &    &    &    &    &    &    &    \\
+        \end{tabular}
+    \end{adjustwidth}
+
+\end{center}
+
+\subsubsection*{MLF:}
+\begin{center}
+    \begin{adjustwidth}{-2cm}{}
+        \scalebox{0.8}{
+            \begin{tabular}{ c| c c c c c c c c c c c c c c c c c c c c }
+                Zeit                                             & 0                                     & 1                                     & 2                                     & 3                                     & 4                                     & 5                                     & 6                                     & 7                                     & 8                                     & 9                                     & 10                                    & 11                                    & 12                                    & 13                                    & 14                                    & 15                                    & 16                                    & 17                                    & 18                                    & 19                                    \\
+                \hline
+                CPU                                              & A\textsubscript{7}\textsuperscript{0} & A\textsubscript{6}\textsuperscript{1} & A\textsubscript{5}\textsuperscript{1} & B\textsubscript{4}\textsuperscript{0} & C\textsubscript{3}\textsuperscript{0} & B\textsubscript{3}\textsuperscript{1} & B\textsubscript{2}\textsuperscript{1} & D\textsubscript{2}\textsuperscript{0} & E\textsubscript{4}\textsuperscript{0} & C\textsubscript{2}\textsuperscript{1} & C\textsubscript{1}\textsuperscript{1} & D\textsubscript{1}\textsuperscript{1} & E\textsubscript{3}\textsuperscript{1} & E\textsubscript{2}\textsuperscript{1} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{3}\textsuperscript{2} & A\textsubscript{2}\textsuperscript{2} & A\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & E\textsubscript{1}\textsuperscript{2} \\
+                \hline
+                LVL 0                                            &                                       &                                       & B\textsubscript{4}\textsuperscript{0} & C\textsubscript{3}\textsuperscript{0} &                                       &                                       & D\textsubscript{2}\textsuperscript{0} &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       \\
+                \texttau\textsubscript{0}=2\textsuperscript{0}=1 &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       \\
+                \hline
+                LVL 1                                            &                                       &                                       &                                       &                                       & B\textsubscript{3}\textsuperscript{1} & C\textsubscript{2}\textsuperscript{1} & C\textsubscript{2}\textsuperscript{1} & C\textsubscript{2}\textsuperscript{1} & C\textsubscript{2}\textsuperscript{1} & D\textsubscript{1}\textsuperscript{1} & D\textsubscript{1}\textsuperscript{1} & E\textsubscript{3}\textsuperscript{1} &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       \\
+                \texttau\textsubscript{1}=2\textsuperscript{1}=2 &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       & D\textsubscript{1}\textsuperscript{1} & E\textsubscript{3}\textsuperscript{1} & E\textsubscript{3}\textsuperscript{1} &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       &                                       \\
+                \hline
+                LVL 2                                            &                                       &                                       &                                       & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & A\textsubscript{4}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & E\textsubscript{1}\textsuperscript{2} &                                       \\
+                \texttau\textsubscript{2}=2\textsuperscript{2}=4 &                                       &                                       &                                       &                                       &                                       &                                       &                                       & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & B\textsubscript{1}\textsuperscript{2} & E\textsubscript{1}\textsuperscript{2} & E\textsubscript{1}\textsuperscript{2} & E\textsubscript{1}\textsuperscript{2} & E\textsubscript{1}\textsuperscript{2} &                                       &                                       \\
+            \end{tabular}
+        }
+    \end{adjustwidth}
+\end{center}
+
+\subsection*{b)}
+\subsubsection*{SRTN:}
+\begin{center}
+    \begin{tabular}{ c|c c c c c| c  }
+        Prozess     & A  & B & C & D & E & Mittelwert \\
+        \hline
+        Wartezeit   & 13 & 0 & 5 & 0 & 3 & 21/5=4,2   \\
+        Antwortzeit & 20 & 4 & 8 & 2 & 7 & 41/5=8,2   \\
+    \end{tabular}
+\end{center}
+
+\subsubsection*{HRRN:}
+\begin{center}
+    \begin{tabular}{ c|c c c c c| c  }
+        Prozess     & A & B  & C & D  & E  & Mittelwert \\
+        \hline
+        Wartezeit   & 0 & 8  & 4 & 8  & 8  & 28/5=5,6   \\
+        Antwortzeit & 7 & 12 & 7 & 10 & 12 & 48/5=9,6   \\
+    \end{tabular}
+\end{center}
+
+\subsubsection*{MLF:}
+\begin{center}
+    \begin{tabular}{ c|c c c c c| c  }
+        Prozess     & A  & B  & C & D & E  & Mittelwert \\
+        \hline
+        Wartezeit   & 18 & 13 & 5 & 3 & 8  & 40/5=8     \\
+        Antwortzeit & 11 & 17 & 7 & 5 & 12 & 60/5=12    \\
+    \end{tabular}
+\end{center}
+
+\end{document}

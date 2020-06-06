@@ -1,6 +1,7 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{listings}
 \usepackage {tikz}
+\usepackage[]{hyperref}
 \usetikzlibrary {positioning}
 \definecolor {processblue}{cmyk}{0.96,0,0,0}
 
@@ -9,6 +10,7 @@
 
 \begin{document}
 \noindent
+    \paragraph{Jonas Kuß, Anton Jürß, Daniel Nikulin, Robin Sadeghpour}
     \section*{Aufgabe 2.3}
     \subsection*{a)}
     Prozesse representieren sequentielle Aktivitäten innerhalb eines Systems.\\
@@ -16,13 +18,13 @@
     eine bestimmte Ausführung eines Programms.\\
     Ein Prozess wird definiert durch den Besitz von Ressourcen, 
     durch eine \\Arbeitsvorschrift und durch einen Aktivitätsträger, welcher die\\
-    Verarbeitungsvorschrift ausführt. 
-    Da Prozesse schaffen Struktur und Ordnung innerhalb eines \\
+    Verarbeitungsvorschrift ausführt. \\ 
+    Die Prozesse schaffen Struktur und Ordnung innerhalb eines \\
     Programms (Prozesshirarchie)
-    und ermöglichen neben sequentieller Arbeit, auch parallele (Nebenläufigkeit und Parallelität). 
+    und ermöglichen neben sequentieller Arbeit auch parallele Arbeit (Nebenläufigkeit und Parallelität). 
     Somit ermöglichen Prozesse eine effizientere Nutzung von Ressourcen.
     Prozesse werden von einem laufendem Programm erzeugt und erhalten von diesem Eingaben,
-    welche sie verarbeiten und liefer demzufolge Ausgaben. Sie sind somit einem Programm
+    welche sie verarbeiten und liefern demzufolge Ausgaben. Sie sind somit einem Programm
     eindeutig zugewiesen und können somit als eine Instanz dessen aufgefasst werden.
     \\
     \\
@@ -37,7 +39,7 @@
     ist eine tatsächlich simultane Ausführung von Prozessen.\\
     Es werden mehrere Prozesse auf mindestens
     zwei Prozessoren zugeordnet. Somit ist die Parallelität eine Teilmenge der Nebenläufigkeit.
-    Zudem sind sind mehrfache Verarbeitungselemente notwendig (z.B. Prozessoren).
+    Zudem sind mehrfache Verarbeitungselemente notwendig (z.B. Prozessoren).
     \\
     \\
     Quellen: Vorlesungsfolien Kapitel 2, Folien 12-14
@@ -52,7 +54,37 @@
     \\
     Quellen: Vorlesungsfolien Kapitel 2, Folien 16-18
     \subsection*{d)}
-    TODO
+    Ein Thread ist eine Ausführungseinheit eines Prozesses. Mehrere Threads können einem Prozess zugeteilt werden. Threads entsprechen
+     einem Kontrollfluss von einem oder mehreren Prozessen. 
+    Ein Thread verfügt über die gleichen Betriebsmittel und befindet sich im selben virtuellen Adressraum
+    wie die anderen Threads des Prozesses, somit können mehrere Threads sich gegenseitig beeinflussen.
+    Bei Prozessen ist das nicht der Fall, da jeder Prozess über eigene Ressourcen verfügt.  
+    Threads werden im Allgemeinen in User-Level (UL) Threads und Kernel-Level (KL) Threads unterschieden. 
+    UL-Threads werden vollständig im Adressraum der Anwendung realisiert. Somit sind diese dem Betriebssystem völlig unbekannt.
+    Prozesse dahingegen sind dem Betriebssystem (BS) bekannt. Aus diesem Grund dispatcht das BS mindestens einen KL Thread als Träger für die UL Threads.
+    Prozesse interagieren mit dem BS, wobei dies bei UL Threads nicht der Fall ist. Falls ein Prozess blockiert ist, können andere Prozesse auch nicht
+    ausgeführt werden bis zur Fehlerbehandlung des blockierten Prozesses. Bei multithreading Modellen (Verwendung von UL Threads) können Threads trotz 
+    eines blockierten Threads dennoch weiter laufen.
+    \\
+    \\
+    \\
+    \subsubsection*{Vorteile von multithreading}
+    \begin{itemize}
+        \item Mehrere Threads können parallel ausgeführt werden
+        \item Auslagerung von Aufgabenteilen auf mehrere Threads kann diese Aufgabe effizienter lösen
+        \item Kürzere Leerläufe bei Lese- und Schreibevorgängen
+        \item Blockierender Systemaufruf muss nicht unbedingt alle Threads blockieren (Abhängig vom multithreading Modell)
+        \item Bessere Fehlerbehandlung
+        \item Scheduling Algorithmus beliebig
+    \end{itemize}
+    Quellen:
+    \begin{itemize}
+        \item Vorlesungsfolien Kapitel 2, Folien 25-40
+        \item \href{https://www.tutorialspoint.com/operating_system/os_multi_threading.html}{tutorialspoint.com}
+    \end{itemize}
+    
+
+
     \section*{Aufgabe 2.4}
     \subsection*{a)}
     \begin {center}
@@ -87,11 +119,12 @@
         \draw[->] (i) -- (k);
         \end{tikzpicture}
     \end{center}
+    \indent
     \subsection*{b)}
     \begin{lstlisting}
-        a
         fork b
         fork c
+        a
         join b 
         d
         join c
@@ -101,11 +134,12 @@
         j
         join PartTwo
         k
-
+        join PartOne
+        end
 
         PartOne:                PartTwo:
         f                       g
-        h                       j
+        h                       i
         end                     end
     \end{lstlisting}
     \indent
@@ -113,23 +147,23 @@
 \begin{minipage}{.5\textwidth}
     \subsection*{a) fork/join}
     \begin{lstlisting}
-        C
         fork Part
         fork B
         fork K
+        C
         join B
         D
         E
         fork F
         join K
         G
-        join F
         fork J
+        join F
         Join Part
         I
         join J
         X
-    
+        end
 
         Part:
         A
@@ -168,9 +202,4 @@
         X
     \end{lstlisting}
 \end{minipage}
-
-
-
-
-
 \end{document}
