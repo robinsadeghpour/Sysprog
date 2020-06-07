@@ -1,7 +1,8 @@
 #include "../lib/PRIOP.h"
 #include <stdio.h>
 
-int queue_add_sorted(process *arriving_process, queue_object* queue) {
+// add to queue ordered by priority
+int prio_queue_add(process *arriving_process, queue_object* queue) {
     queue_object* new_queue_object= calloc(1,sizeof(queue_object));
     new_queue_object->object=arriving_process;
     
@@ -41,7 +42,7 @@ process *PRIOP_tick(process *running_process)
         {
             // new arriving process has higher prio
             // add running process back to queue and set running process ti the process with higher prio
-            queue_add_sorted(running_process, PRIOP_queue);
+            prio_queue_add(running_process, PRIOP_queue);
             running_process = queue_poll(PRIOP_queue);
         }
         running_process->time_left--;
@@ -65,7 +66,7 @@ process *PRIOP_new_arrival(process *arriving_process, process *running_process)
     //TODO
     if (arriving_process != NULL)
     {
-        queue_add_sorted(arriving_process, PRIOP_queue);
+        prio_queue_add(arriving_process, PRIOP_queue);
     }
     return running_process;
 }
