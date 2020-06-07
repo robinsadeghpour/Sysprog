@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 queue_object* HRRN_queue;
+float current_tick;
 //You can add more global variables and structs here
 
 /**
